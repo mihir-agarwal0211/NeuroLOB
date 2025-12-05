@@ -1,6 +1,6 @@
-streamlit
-torch
-pandas
-numpy
-plotly
-scipy
+streamlit==1.52.0
+pandas==2.3.3
+plotly==6.5.0
+scipy==1.16.3
+# Add this line:
+statsmodels
