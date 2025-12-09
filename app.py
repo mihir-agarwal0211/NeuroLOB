@@ -119,6 +119,18 @@ class NPPBaseline(nn.Module):
 # ==========================================
 # 4. UTILITIES & GENERATION LOGIC
 # ==========================================
+def downcast_df(df):
+    for col in df.select_dtypes(include=['float64']).columns:
+        df[col] = pd.to_numeric(df[col], downcast='float')
+    for col in df.select_dtypes(include=['int64']).columns:
+        # Check to ensure values fit in int32
+        min_val = df[col].min()
+        max_val = df[col].max()
+        if min_val >= np.iinfo(np.int32).min and max_val <= np.iinfo(np.int32).max:
+             df[col] = pd.to_numeric(df[col], downcast='integer')
+    return df
+
+
 @st.cache_resource
 def load_model(uploaded_file, model_type, local_path=None):
     input_dim = 9 
@@ -167,6 +179,7 @@ def load_real_data(file_input):
                 
         # 2. Normalize columns
         if df is not None:
+            df = downcast_df(df)
             if 'price_ret' not in df.columns and 'price' in df.columns:
                 df['price_ret'] = df['price'].pct_change().fillna(0)
             return df
@@ -271,8 +284,8 @@ else: st.sidebar.warning("Using Random Weights (Simulation Mode)")
 st.sidebar.subheader("Benchmarking")
 local_data = "bitmex_incremental_book_L2.csv"
 use_local = False
-# if os.path.exists(local_data):
-#     use_local = st.sidebar.checkbox("Use local 'bitmex_incremental_book_L2.csv'", value=False)
+if os.path.exists(local_data):
+    use_local = st.sidebar.checkbox("Use local 'bitmex_incremental_book_L2.csv'", value=False)
 
 df_real = None
 if use_local:
