@@ -179,7 +179,12 @@ def load_real_data(file_input):
                 
         # 2. Normalize columns
         if df is not None:
-            df = downcast_df(df)
+            # df = downcast_df(df)
+            MAX_ROWS = 5_000_000
+            if len(df) > MAX_ROWS:
+                st.warning(f"Dataframe size is large ({len(df):,}). Sampling down to {MAX_ROWS:,} rows to conserve memory.")
+                # Sample without replacement
+                df = df.sample(n=MAX_ROWS, replace=False, random_state=42)
             if 'price_ret' not in df.columns and 'price' in df.columns:
                 df['price_ret'] = df['price'].pct_change().fillna(0)
             return df
