@@ -287,7 +287,7 @@ if source: st.sidebar.success(f"Weights: {source}")
 else: st.sidebar.warning("Using Random Weights (Simulation Mode)")
 
 st.sidebar.subheader("Benchmarking")
-local_data = "bitmex_incremental_book_L2.csv"
+local_data = "bitmex_incremental_book_L2_5M_sample.csv.gz"
 use_local = False
 if os.path.exists(local_data):
     use_local = st.sidebar.checkbox("Use local 'bitmex_incremental_book_L2.csv'", value=False)
