@@ -180,7 +180,7 @@ def load_real_data(file_input):
         # 2. Normalize columns
         if df is not None:
             # df = downcast_df(df)
-            MAX_ROWS = 5_000_000
+            MAX_ROWS = 5000000
             if len(df) > MAX_ROWS:
                 st.warning(f"Dataframe size is large ({len(df):,}). Sampling down to {MAX_ROWS:,} rows to conserve memory.")
                 # Sample without replacement
